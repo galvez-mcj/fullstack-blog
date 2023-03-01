@@ -1,8 +1,11 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Navigate } from "react-router-dom"
+import { UserContext } from "../UserContext"
 
 export default function LoginPage() {
     const [redirect, setRedirect] = useState(false)
+    const { setUserInfo } = useContext(UserContext)
+
     const [formData, setFormData] = useState({
         username: "",
         password: ""
@@ -25,7 +28,10 @@ export default function LoginPage() {
             credentials: 'include'
          })
          if (response.ok) {
-            setRedirect(prevState => !prevState)
+            response.json().then(userInfo => {
+                setUserInfo(userInfo)
+                setRedirect(prevState => !prevState)
+            })
          } else {
             alert('Wrong Login Details')
          }
